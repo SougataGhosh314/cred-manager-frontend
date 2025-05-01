@@ -16,7 +16,8 @@ export const routes: Routes = [
         children: [
             { path: '', component: CredentialListComponent},
             { path: 'add', component: CredentialFormComponent },
-            { path: ':id', component: CredentialDetailComponent }
+            { path: ':id', component: CredentialDetailComponent },
+            { path: ':id/edit', component: CredentialFormComponent },
         ]
     }
 ];

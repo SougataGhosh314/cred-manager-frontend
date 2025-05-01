@@ -4,13 +4,14 @@ import { NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { CredentialService } from './credential.service';
 import { Credential } from '../models/credential';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-credential-list',
   templateUrl: './credential-list.component.html',
   styleUrls: ['./credential-list.component.css'],
   standalone: true,
-  imports: [NgFor, NgIf]
+  imports: [NgFor, NgIf, RouterModule]
 })
 export class CredentialListComponent implements OnInit {
   credentials: Credential[] = [];
