@@ -11,10 +11,19 @@ import { AuthService } from '../auth/auth.service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
+  isDarkMode = false;
+
   constructor(public authService: AuthService, private router: Router) {}
 
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
+
+  toggleDarkMode() {
+    const html = document.documentElement;
+    this.isDarkMode = html.classList.toggle('dark');
+    localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
+  }  
+  
 }

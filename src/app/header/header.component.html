@@ -1,4 +1,25 @@
-<header *ngIf="authService.isLoggedIn$ | async" style="margin-bottom: 1rem;">
-    <button (click)="logout()">Logout</button>
+<header
+  *ngIf="authService.isLoggedIn$ | async"
+  class="flex justify-between items-center px-6 py-4 bg-white dark:bg-gray-800 shadow-md mb-6"
+>
+  <h1 class="text-xl font-bold text-gray-800 dark:text-white">Cred Manager</h1>
+
+  <div class="flex items-center gap-4">
+    <button
+      (click)="toggleDarkMode()"
+      class="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition"
+    >
+        <span *ngIf="isDarkMode; else lightIcon">🌜</span>
+        <ng-template #lightIcon>🌞</ng-template>
+    </button>
+
+    <button
+      (click)="logout()"
+      class="bg-red-500 hover:bg-red-600 text-white px-4 py-1.5 rounded-lg transition"
+    >
+      Logout
+    </button>
+  </div>
 </header>
+
   
