@@ -1,0 +1,42 @@
+<h2>Login</h2>
+
+<div *ngIf="message" class="error-message">{{ message }}</div>
+
+<form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+  <div>
+    <input
+      [(ngModel)]="username"
+      name="username"
+      placeholder="Username"
+      required
+      #usernameField="ngModel"
+    />
+    <div *ngIf="usernameField.invalid && usernameField.touched" style="color: red;">
+      Username is required.
+    </div>
+  </div>
+
+  <div>
+    <input
+      [(ngModel)]="password"
+      name="password"
+      type="password"
+      placeholder="Password"
+      required
+      minlength="4"
+      #passwordField="ngModel"
+    />
+    <div *ngIf="passwordField.invalid && passwordField.touched" style="color: red;">
+      <div *ngIf="passwordField.errors?.['required']">Password is required.</div>
+      <div *ngIf="passwordField.errors?.['minlength']">Minimum 4 characters required.</div>
+    </div>
+  </div>
+
+  <button type="submit" [disabled]="loading || loginForm.invalid">
+    {{ loading ? 'Logging in...' : 'Login' }}
+  </button>
+</form>
+
+<div *ngIf="errorMessage" style="color: red; margin-top: 10px;">
+  {{ errorMessage }}
+</div>

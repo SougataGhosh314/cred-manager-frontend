@@ -1,0 +1,4 @@
+<header *ngIf="authService.isLoggedIn$ | async" style="margin-bottom: 1rem;">
+    <button (click)="logout()">Logout</button>
+</header>
+  
