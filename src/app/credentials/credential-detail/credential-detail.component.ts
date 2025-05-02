@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CredentialService } from '../credential.service';
 import { Credential } from '../../models/credential';
+import { NotificationService } from '../../core/notification/notification.service';
 
 @Component({
   selector: 'app-credential-detail',
@@ -21,7 +22,8 @@ export class CredentialDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute, 
     private credentialService: CredentialService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
@@ -73,8 +75,13 @@ export class CredentialDetailComponent implements OnInit {
     if (!confirm('Are you sure you want to delete this credential?')) return;
   
     this.credentialService.delete(this.credential.id!).subscribe({
-      next: () => this.router.navigate(['/credentials']),
-      error: () => alert('Failed to delete credential.')
+      next: () => {
+        this.notificationService.show('Credential deleted');
+        this.router.navigate(['/credentials']);
+      },
+      error: () => {
+        this.notificationService.show('Failed to delete credential', 'error');
+      }
     });
   }
 }

@@ -4,6 +4,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { CredentialService } from '../credential.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Credential } from '../../models/credential';
+import { NotificationService } from '../../core/notification/notification.service';
 
 @Component({
   selector: 'app-credential-form',
@@ -14,7 +15,6 @@ import { Credential } from '../../models/credential';
 export class CredentialFormComponent {
   credential: Partial<Credential> = {};
   loading = false;
-  errorMessage = '';
 
   credentialId?: number;
   isEditMode = false;
@@ -22,7 +22,8 @@ export class CredentialFormComponent {
   constructor(
     private route: ActivatedRoute,
     private credentialService: CredentialService, 
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -42,7 +43,7 @@ export class CredentialFormComponent {
           this.loading = false;
         },
         error: () => {
-          this.errorMessage = 'Failed to load credential for editing.';
+          this.notificationService.show('Failed to load credential for editing.', 'error');
           this.loading = false;
         }
       });
@@ -64,17 +65,23 @@ export class CredentialFormComponent {
 
     if (this.isEditMode && this.credentialId) {
       this.credentialService.update(this.credentialId, dto).subscribe({
-        next: () => this.router.navigate(['/credentials', this.credentialId]),
+        next: () => {
+          this.notificationService.show('Credential updated');
+          this.router.navigate(['/credentials', this.credentialId]);
+        },
         error: () => {
-          this.errorMessage = 'Failed to update credential.';
+          this.notificationService.show('Failed to update credential', 'error');
           this.loading = false;
         }
       });
     } else {
       this.credentialService.create(dto).subscribe({
-        next: () => this.router.navigate(['/credentials']),
+        next: () => {
+          this.notificationService.show('Credential created');
+          this.router.navigate(['/credentials']);
+        },
         error: () => {
-          this.errorMessage = 'Failed to save credential.';
+          this.notificationService.show('Failed to create credential', 'error');
           this.loading = false;
         }
       });
