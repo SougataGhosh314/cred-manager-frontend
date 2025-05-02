@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
-import { LoginComponent } from './auth/login.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
 import { CredentialListComponent } from './credentials/credential-list.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { CredentialDetailComponent } from './credentials/credential-detail/credential-detail.component';
@@ -9,6 +10,7 @@ import { CredentialFormComponent } from './credentials/credential-form/credentia
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
+    { path: 'register', component: RegisterComponent },
     { path: 'login', component: LoginComponent },
     { 
         path: 'credentials',
