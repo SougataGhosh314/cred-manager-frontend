@@ -37,18 +37,6 @@ Built with **Angular 18**, **Tailwind CSS**, and **AG Grid**, the app provides a
 - JWT for authentication
 - Angular Router, HttpClient, Reactive Forms
 
----
-
-## 🚀 Setup Instructions
-
-### 1. Install dependencies
-
-```bash
-npm install
-ng serve
-
-
-----------------------------------------------------
 
 🌐 Backend Integration
 Expects backend to be running at http://localhost:8080/api (configurable)
@@ -64,7 +52,7 @@ Route	Component	Access
 /credentials/new	CredentialFormComponent	Auth only
 /credentials/:id/edit	CredentialFormComponent	Auth only
 
-Design Notes:
+🧾 Design Notes:
 
 Zero-knowledge design: passwords are decrypted only on demand and only for the logged-in user
 No master key access from frontend
@@ -72,9 +60,18 @@ Dark mode persisted in localStorage using ThemeService
 JWT stored in localStorage, auto-attached by HTTP interceptor
 AG Grid theming auto-syncs with dark/light mode
 
-Security
+🔐 Security
 Password never exposed in frontend storage
 No password decryption done on frontend
 All secure operations go through backend
 AuthGuard protects all credential routes
 Dark mode and JWT state persisted securely (no session hijack vectors)
+---
+
+## 🚀 Setup Instructions
+
+### 1. Install dependencies
+
+```bash
+npm install
+ng serve
