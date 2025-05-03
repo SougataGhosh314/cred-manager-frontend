@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { ThemeService } from '../shared/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -18,8 +19,12 @@ export class HeaderComponent {
     public authService: AuthService, 
     private router: Router,
     private themeService: ThemeService
-  ) {
-    this.isDarkMode = this.themeService.isDarkModeSubject.value;
+  ) {}
+
+  ngOnInit(): void {
+    // Initialize the current theme based on stored preference
+    this.isDarkMode = this.themeService.getStoredTheme();
+
   }
 
   logout() {
@@ -28,8 +33,7 @@ export class HeaderComponent {
   }
 
   toggleDarkMode() {
-    this.themeService.toggleDarkMode();
-    this.isDarkMode = this.themeService.isDarkModeSubject.value;
+    this.themeService.toggleTheme();
+    this.isDarkMode = this.themeService.getStoredTheme();
   }  
-  
 }

@@ -1,7 +1,7 @@
 // src/app/credentials/credential-list.component.ts
 
-import { NgIf } from '@angular/common';
-import { Component, OnInit, NgZone } from '@angular/core';
+import { NgClass, NgIf } from '@angular/common';
+import { Component, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
 import { CredentialService } from './credential.service';
 import { Credential } from '../models/credential';
 import { RouterModule } from '@angular/router';
@@ -19,7 +19,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './credential-list.component.html',
   styleUrls: ['./credential-list.component.css'],
   standalone: true,
-  imports: [NgIf, RouterModule, AgGridModule]
+  imports: [NgIf, NgClass, RouterModule, AgGridModule]
 })
 export class CredentialListComponent implements OnInit {
   credentials: Credential[] = [];
@@ -31,7 +31,7 @@ export class CredentialListComponent implements OnInit {
 
   gridApi: any;
 
-  currentTheme: string = 'ag-theme-quartz'; // Default theme
+  currentTheme: string; // Default theme
   private themeSubscription!: Subscription;
 
   onGridReady(params: GridReadyEvent) {
@@ -48,11 +48,15 @@ export class CredentialListComponent implements OnInit {
     private notificationService: NotificationService, 
     private router: Router,
     private ngZone: NgZone,
-    private themeService: ThemeService 
+    private themeService: ThemeService,
+    private cdr: ChangeDetectorRef
   ) {
+    this.currentTheme = this.themeService.getCurrentTheme();
   }
 
   ngOnInit() {
+    // Setting initial theme **before** first render
+    this.currentTheme = this.themeService.getCurrentTheme();
     this.themeSubscription = this.themeService.isDarkMode$.subscribe((isDark) => {
       this.currentTheme = isDark ? 'ag-theme-quartz-dark' : 'ag-theme-quartz';
     });
@@ -63,10 +67,12 @@ export class CredentialListComponent implements OnInit {
         this.credentials = data;
         this.loading = false;
         this.createColumnDefs(); // Call function to define columns once data is loaded
+        this.cdr.detectChanges();
       },
       error: err => {
         this.error = 'Failed to load credentials.';
         this.loading = false;
+        this.notificationService.show('Failed to load credentials. Please try again later.');
       }
     });
   }
