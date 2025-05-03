@@ -1,47 +1,97 @@
 // src/app/credentials/credential-list.component.ts
 
-import { NgFor, NgIf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { CredentialService } from './credential.service';
 import { Credential } from '../models/credential';
 import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
-import { NgZone } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { NotificationService } from '../core/notification/notification.service';
+import { AgGridModule } from 'ag-grid-angular';
+import { ColDef, GridReadyEvent, QuickFilterModule } from 'ag-grid-community';
+import { ClientSideRowModelModule } from 'ag-grid-community';
+import { ThemeService } from '../shared/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-credential-list',
   templateUrl: './credential-list.component.html',
   styleUrls: ['./credential-list.component.css'],
   standalone: true,
-  imports: [NgFor, NgIf, RouterModule]
+  imports: [NgIf, RouterModule, AgGridModule]
 })
 export class CredentialListComponent implements OnInit {
   credentials: Credential[] = [];
   loading = true;
   error: string | null = null;
+  columnDefs: ColDef[] = []; // column definitions for ag-Grid
+  gridOptions = {}; // for grid configuration
+  modules = [ClientSideRowModelModule, QuickFilterModule];
+
+  gridApi: any;
+
+  currentTheme: string = 'ag-theme-quartz'; // Default theme
+  private themeSubscription!: Subscription;
+
+  onGridReady(params: GridReadyEvent) {
+    this.gridApi = params.api;
+  }
+
+  onQuickFilterChanged(searchValue: string) {
+    this.gridApi!.setGridOption('quickFilterText', searchValue);
+  }
 
   constructor(
     private credentialService: CredentialService, 
     private authService: AuthService,
     private notificationService: NotificationService, 
     private router: Router,
-    private ngZone: NgZone
-  ) {}
+    private ngZone: NgZone,
+    private themeService: ThemeService 
+  ) {
+  }
 
   ngOnInit() {
+    this.themeSubscription = this.themeService.isDarkMode$.subscribe((isDark) => {
+      this.currentTheme = isDark ? 'ag-theme-quartz-dark' : 'ag-theme-quartz';
+    });
+
     this.loading = true;
     this.credentialService.getAll().subscribe({
       next: data => {
         this.credentials = data;
         this.loading = false;
+        this.createColumnDefs(); // Call function to define columns once data is loaded
       },
       error: err => {
         this.error = 'Failed to load credentials.';
         this.loading = false;
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.themeSubscription) {
+      this.themeSubscription.unsubscribe();
+    }
+  }
+
+  createColumnDefs() {
+    this.columnDefs = [
+      { headerName: 'Title', field: 'title', sortable: true, filter: true, resizable: true, cellRenderer: this.linkRenderer.bind(this) },
+      { headerName: 'Username', field: 'username', sortable: true, filter: true, resizable: true },
+      { headerName: 'Description', field: 'description', sortable: true, filter: true, resizable: true },
+      // Add more columns as needed from your Credential model
+    ];
+  }
+
+  linkRenderer(params: any) {
+    return `<a href="/credentials/${params.data.id}">${params.value}</a>`;
+  }
+
+  onRowClicked(event: any) {
+    this.router.navigate(['/credentials', event.data.id]);
   }
 
   confirmDeleteAccount() {

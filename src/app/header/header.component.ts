@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
+import { ThemeService } from '../shared/theme.service';
 
 @Component({
   selector: 'app-header',
@@ -13,7 +14,13 @@ import { AuthService } from '../auth/auth.service';
 export class HeaderComponent {
   isDarkMode = false;
 
-  constructor(public authService: AuthService, private router: Router) {}
+  constructor(
+    public authService: AuthService, 
+    private router: Router,
+    private themeService: ThemeService
+  ) {
+    this.isDarkMode = this.themeService.isDarkModeSubject.value;
+  }
 
   logout() {
     this.authService.logout();
@@ -21,9 +28,8 @@ export class HeaderComponent {
   }
 
   toggleDarkMode() {
-    const html = document.documentElement;
-    this.isDarkMode = html.classList.toggle('dark');
-    localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
+    this.themeService.toggleDarkMode();
+    this.isDarkMode = this.themeService.isDarkModeSubject.value;
   }  
   
 }
