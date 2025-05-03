@@ -66,6 +66,7 @@ No password decryption done on frontend
 All secure operations go through backend
 AuthGuard protects all credential routes
 Dark mode and JWT state persisted securely (no session hijack vectors)
+
 ---
 
 ## 🚀 Setup Instructions
