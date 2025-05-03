@@ -84,4 +84,13 @@ export class CredentialDetailComponent implements OnInit {
       }
     });
   }
+
+  copyToClipboard(text: string) {
+    navigator.clipboard.writeText(text).then(() => {
+      this.notificationService.show('Copied to clipboard!');
+    }).catch(() => {
+      this.notificationService.show('Failed to copy to clipboard.', 'error');
+    });
+  }
+  
 }
