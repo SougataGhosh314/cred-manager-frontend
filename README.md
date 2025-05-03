@@ -1,27 +1,80 @@
-# CredManagerFrontend
+# Cred Manager - Frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.9.
+This is the Angular frontend for the self-hosted, zero-knowledge credentials manager.
 
-## Development server
+Built with **Angular 18**, **Tailwind CSS**, and **AG Grid**, the app provides a modern UI and full CRUD capabilities for user credentials — securely encrypted and stored with zero-knowledge principles.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## ✨ Features
 
-## Code scaffolding
+- ✅ **Login and registration** (JWT-based)
+- 🔐 **Multi-user support**
+- 🕶️ **Dark mode toggle** (with theme persistence)
+- 📋 **Credential list view** with:
+  - AG Grid for sorting, filtering, and pagination
+  - Search bar
+  - Responsive layout
+- 🧾 **Credential detail view**
+  - Password masked by default
+  - On-demand decryption via secure backend request
+- ➕ **Add / Edit credentials**
+  - Validation and notifications
+- 🗑️ **Credential deletion**
+- 👤 **User account deletion**
+- 🔐 **Session management** via JWT in `localStorage`
+- 📆 **Created / Updated timestamps** shown in human-readable format
+- ⚠️ **Error handling and user feedback**
+- 🚫 **Protected routes with AuthGuard**
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+---
 
-## Build
+## 🧱 Technologies Used
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- Angular 18
+- Tailwind CSS
+- AG Grid
+- RxJS
+- Standalone components
+- JWT for authentication
+- Angular Router, HttpClient, Reactive Forms
 
-## Running unit tests
+---
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## 🚀 Setup Instructions
 
-## Running end-to-end tests
+### 1. Install dependencies
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+```bash
+npm install
+ng serve
 
-## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+----------------------------------------------------
+
+🌐 Backend Integration
+Expects backend to be running at http://localhost:8080/api (configurable)
+
+Uses Authorization: Bearer <JWT> in all protected requests.
+
+🧾 Pages & Routes
+Route	Component	Access
+/login	LoginComponent	Public
+/register	RegisterComponent	Public
+/credentials	CredentialListComponent	Auth only
+/credentials/:id	CredentialDetailComponent	Auth only
+/credentials/new	CredentialFormComponent	Auth only
+/credentials/:id/edit	CredentialFormComponent	Auth only
+
+Design Notes:
+
+Zero-knowledge design: passwords are decrypted only on demand and only for the logged-in user
+No master key access from frontend
+Dark mode persisted in localStorage using ThemeService
+JWT stored in localStorage, auto-attached by HTTP interceptor
+AG Grid theming auto-syncs with dark/light mode
+
+Security
+Password never exposed in frontend storage
+No password decryption done on frontend
+All secure operations go through backend
+AuthGuard protects all credential routes
+Dark mode and JWT state persisted securely (no session hijack vectors)
