@@ -60,12 +60,12 @@ Dark mode persisted in localStorage using ThemeService
 JWT stored in localStorage, auto-attached by HTTP interceptor
 AG Grid theming auto-syncs with dark/light mode
 
-🔐 Security
-Password never exposed in frontend storage
-No password decryption done on frontend
-All secure operations go through backend
-AuthGuard protects all credential routes
-Dark mode and JWT state persisted securely (no session hijack vectors)
+🔐 Security: 
+Password never exposed in frontend storage. 
+No password decryption done on frontend. 
+All secure operations go through backend. 
+AuthGuard protects all credential routes. 
+Dark mode and JWT state persisted securely (no session hijack vectors).
 
 ---
 
